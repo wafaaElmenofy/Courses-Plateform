@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -9,12 +11,15 @@ Route::get('/', function () {
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutherController;
 
-// صفحات التسجيل والدخول
-Route::get('/register', [AutherController::class, 'showRegister']); // يعرض صفحة Register
-Route::post('/register', [AutherController::class, 'register']);    // يعالج بيانات التسجيل
 
-Route::get('/login', [AutherController::class, 'showLogin']);      // يعرض صفحة Login
-Route::post('/login', [AutherController::class, 'login']);         // يعالج بيانات الدخول
+Route::get('/register', [AutherController::class, 'showRegister']); 
+Route::post('/register', [AutherController::class, 'register']);   
 
-Route::get('/logout', [AutherController::class, 'logout']);        // لتسجيل الخروج
+Route::get('/login', [AutherController::class, 'showLogin']);      
+Route::post('/login', [AutherController::class, 'login']);        
 
+Route::get('/logout', [AutherController::class, 'logout']);        
+
+
+// Route::get('/student/dashboard', [DashboardController::class, 'student'])->middleware('checkrole:student');
+// Route::get('/instructor/dashboard', [DashboardController::class, 'instructor'])->middleware('checkrole:instructor');

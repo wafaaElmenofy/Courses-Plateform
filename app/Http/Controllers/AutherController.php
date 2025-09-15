@@ -5,65 +5,110 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use App\Models\User; 
+use App\Models\User;
 
 class AutherController extends Controller
 {
-    // Regisrer
-
-    public function showRegister(){
+    
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    public function register(Request $request){
-        $request -> validate([
-            'name' => 'required',
-            'email' => 'required | email | unique:User,email',
-            'password' => 'required | min:8 | confirmed',
-            'role' => 'rquired |in:student,instructor',
+    
+    public function register(Request $request)
+    {
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+            'role' => 'required|in:student,instructor',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password'=>Hash::make($request->password),
+            'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        
+        return redirect('/login')->with('success', 'Account created successfully! Please login.');
     }
 
-    // login
-
-    public function showLogin(){
+    
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request){
-        $request ->validate([
-            'email' => 'required |email',
-            'password' => 'required',
     
+    public function login(Request $request)
+    {
+        
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first;
+        
+        $user = User::where('email', $request->email)->first();
 
-        if($user && Hash::check($request->password , $user->password)){
-            Session::put('user',$user->id);
-            Session::put('role',$user->role);
+        
+        if ($user && Hash::check($request->password, $user->password)) {
 
-            if($user->role == 'instructor'){
-                return redirect('/instructor/dashboard');
-            }
-            else{
-                return redirect('/student/dashboard');
-            }
+
+
+
+            
+        $userid=session('user_id');
+        $userrole=session('user_role');
+        $user=User::find($userid);
+        //$user=Auth::user();
+        if($userrole==='student'){
+        //if($user->role==='student'){
+          $courses = $user->enrolledCourses;  
+          return view ('dashboard',[
+            'role'=>'student',
+            'name'=>$user->name,
+             'courses'=>$courses,
+          ]);
         }
-        else{
-            return back()->withErrors(['login' => 'There was an error'])->withInput();
+        elseif ($userrole==='instructor'){
+         // elseif   ($user->role ==='instructor'){
+            $mycourses=$user->createdCourses;
+           return view ('dashboard',[
+            'role'=>'instructor',
+            'name'=>$user->name,
+            'mycourses'=>$mycourses
+           ]); 
         }
+        else {
+            return redirect ('login');
+        }
+    
+}
+            
+        //     Session::put('user', $user->id);
+        //     Session::put('role', $user->role);
+
+            
+        //     if ($user->role == 'instructor') {
+        //         return redirect('/instructor/dashboard');
+        //     } else {
+        //         return redirect('/student/dashboard');
+        //     }
+        // } else {
+            
+        //     return back()->withErrors(['login' => 'Invalid email or password'])->withInput();
+        // }
     }
 
-    public function logOut(){
-        Session::flush();
-        return redirect('/login');
+    // logout
+    public function logOut()
+    {
+        Session::flush(); 
+        return redirect('/login')->with('success', 'Logged out successfully!');
     }
 }
