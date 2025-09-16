@@ -56,21 +56,7 @@ class AutherController extends Controller
             Session::put('user_id', $user->id);
             Session::put('user_role', $user->role);
 
-            if ($user->role === 'student') {
-                $courses = $user->enrolledCourses;
-                return view('dashboard', [
-                    'role' => 'student',
-                    'name' => $user->name,
-                    'courses' => $courses,
-                ]);
-            } elseif ($user->role === 'instructor') {
-                $mycourses = $user->createdCourses;
-                return view('dashboard', [
-                    'role' => 'instructor',
-                    'name' => $user->name,
-                    'mycourses' => $mycourses,
-                ]);
-            }
+            return redirect('/dashboard');
         }
 
         // If invalid login
@@ -82,5 +68,32 @@ class AutherController extends Controller
     {
         Session::flush();
         return redirect('/login')->with('success', 'Logged out successfully!');
+    }
+
+    // Display the user's dashboard based on their role
+    public function dashboard()
+    {
+        $user_id = Session::get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'You must be logged in.');
+        }
+
+        $user = User::find($user_id);
+
+        if ($user->role === 'student') {
+            $courses = $user->enrolledCourses;
+            return view('dashboard', [
+                'role' => 'student',
+                'name' => $user->name,
+                'courses' => $courses,
+            ]);
+        } elseif ($user->role === 'instructor') {
+            $mycourses = $user->createdCourses;
+            return view('dashboard', [
+                'role' => 'instructor',
+                'name' => $user->name,
+                'mycourses' => $mycourses,
+            ]);
+        }
     }
 }

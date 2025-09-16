@@ -4,18 +4,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Enrollment;
 use App\Models\Course;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
 class EnrollmentController extends Controller
 {
 
-    public function index()
-    {
-        $courses = Course::all();
-        return view('enrollments.index', compact('courses'));
+
+
+public function index()
+{
+  
+    $courses = Course::with('instructor')->get();
+
+    $user = null;
+    $isLoggedIn = Session::has('user_id');
+
+    if ($isLoggedIn) {
+        $user = User::find(Session::get('user_id'));
     }
 
+    foreach ($courses as $course) {
+        $course->is_enrolled = false;
+        if ($user && $user->role === 'student') {
+            $course->is_enrolled = $user->enrolledCourses->contains($course->id);
+        }
+    }
+
+    return view('enrollments.index', compact('courses'));
+}
     public function enroll($course_id)
     {
         $user_id = Session::get('user_id');
@@ -43,7 +60,7 @@ class EnrollmentController extends Controller
             'course_id' => $course_id,
         ]);
 
-        return redirect()->back()->with('success', 'You have successfully registered for the course.');
+        return redirect('/dashboard')->with('success', 'You have successfully registered for the course.');
     }
 
 

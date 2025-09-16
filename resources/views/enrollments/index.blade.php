@@ -28,76 +28,69 @@
       border-radius: 15px;
       padding: 20px;
       transition: 0.3s;
-      color: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .course-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
     }
     .btn-enroll {
-      background: linear-gradient(135deg, #1c92d2, #f2fcfe);
+      background-color: #007bff;
+      color: white;
       border: none;
-      border-radius: 12px;
-      padding: 8px 16px;
+      padding: 10px 15px;
+      border-radius: 20px;
+      text-align: center;
+      transition: background-color 0.3s ease;
       font-weight: bold;
-      color: #000;
-      transition: 0.3s;
     }
     .btn-enroll:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-    nav.navbar {
-      animation: slideDown 1.5s ease forwards;
+      background-color: #0056b3;
     }
     .footer {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background-color: #164864;
-      box-shadow: 0 -4px 8px rgba(0,0,0,0.2);
+      background-color: #343a40;
+      color: white;
     }
-    @keyframes fadeSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .navbar {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 <body>
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #164864; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#" style="font-size: 1.5rem;">
-      CourseWay
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-        <li class="nav-item ms-lg-3">
-          <a href="/login" class="btn btn-outline-light px-3">Login</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
 
-  <!-- Courses List -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-graduation-cap"></i> EduPlatform
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a href="/register" class="btn btn-outline-light me-2 px-3">Register</a>
+          </li>
+          <li class="nav-item">
+            <a href="/login" class="btn btn-outline-light px-3">Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <div class="container container-box">
     <h2 class="text-white text-center mb-4">Available Courses</h2>
 
-    <!-- Messages -->
     @if(session('success'))
         <div class="alert alert-success text-center">{{ session('success') }}</div>
     @endif
@@ -116,10 +109,28 @@
               <p>Start: {{ $course->start_date }}</p>
               <p>Enrolled: {{ $course->students->count() }}/{{ $course->max_students }}</p>
             </div>
-            <form action="{{ route('courses.enroll', $course->id) }}" method="POST">
-              @csrf
-              <button type="submit" class="btn-enroll w-100">Enroll</button>
-            </form>
+            <div class="card-footer bg-transparent border-0 pt-0">
+    @if(session('user_id'))
+        @if(session('user_role') === 'student')
+            @if($course->is_enrolled)
+                <p class="text-success fw-bold">Enrolled</p>
+                <form action="{{ route('courses.unenroll', $course->id) }}" method="POST">
+                    @csrf
+                    @method('POST')
+                    <button type="submit" class="btn btn-warning w-100">Unenroll</button>
+                </form>
+            @else
+                <form action="{{ route('courses.enroll', $course->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn-enroll w-100">Enroll</button>
+                </form>
+            @endif
+        @else
+            @endif
+    @else
+        <a href="{{ route('login') }}" class="btn-enroll w-100 text-decoration-none">Login to Enroll</a>
+    @endif
+</div>
           </div>
         </div>
       @endforeach
