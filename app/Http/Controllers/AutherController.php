@@ -9,16 +9,15 @@ use App\Models\User;
 
 class AutherController extends Controller
 {
-    
+    // Show register form
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    
+    // Handle register
     public function register(Request $request)
     {
-        
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -33,82 +32,55 @@ class AutherController extends Controller
             'role' => $request->role,
         ]);
 
-        
         return redirect('/login')->with('success', 'Account created successfully! Please login.');
     }
 
-    
+    // Show login form
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    
+    // Handle login
     public function login(Request $request)
     {
-        
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        
         $user = User::where('email', $request->email)->first();
 
-        
         if ($user && Hash::check($request->password, $user->password)) {
+            // Store user data in session
+            Session::put('user_id', $user->id);
+            Session::put('user_role', $user->role);
 
-
-
-
-            
-        $userid=session('user_id');
-        $userrole=session('user_role');
-        $user=User::find($userid);
-        //$user=Auth::user();
-        if($userrole==='student'){
-        //if($user->role==='student'){
-          $courses = $user->enrolledCourses;  
-          return view ('dashboard',[
-            'role'=>'student',
-            'name'=>$user->name,
-             'courses'=>$courses,
-          ]);
+            if ($user->role === 'student') {
+                $courses = $user->enrolledCourses;
+                return view('dashboard', [
+                    'role' => 'student',
+                    'name' => $user->name,
+                    'courses' => $courses,
+                ]);
+            } elseif ($user->role === 'instructor') {
+                $mycourses = $user->createdCourses;
+                return view('dashboard', [
+                    'role' => 'instructor',
+                    'name' => $user->name,
+                    'mycourses' => $mycourses,
+                ]);
+            }
         }
-        elseif ($userrole==='instructor'){
-         // elseif   ($user->role ==='instructor'){
-            $mycourses=$user->createdCourses;
-           return view ('dashboard',[
-            'role'=>'instructor',
-            'name'=>$user->name,
-            'mycourses'=>$mycourses
-           ]); 
-        }
-        else {
-            return redirect ('login');
-        }
-    
-}
-            
-        //     Session::put('user', $user->id);
-        //     Session::put('role', $user->role);
 
-            
-        //     if ($user->role == 'instructor') {
-        //         return redirect('/instructor/dashboard');
-        //     } else {
-        //         return redirect('/student/dashboard');
-        //     }
-        // } else {
-            
-        //     return back()->withErrors(['login' => 'Invalid email or password'])->withInput();
-        // }
+        // If invalid login
+        return back()->withErrors(['login' => 'Invalid email or password'])->withInput();
     }
 
-    // logout
+    // Handle logout
     public function logOut()
     {
-        Session::flush(); 
+        Session::flush();
         return redirect('/login')->with('success', 'Logged out successfully!');
     }
 }
