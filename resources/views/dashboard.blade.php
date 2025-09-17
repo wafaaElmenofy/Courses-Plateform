@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('title','Profile')
 
@@ -6,7 +6,7 @@
 <div class="dashboard-wrapper py-5">
 
     @if($role === 'student')
-        
+
         <div class="card shadow-lg p-4 bg-glass">
             <h2 class="text-primary mb-4">hellow</h2>
             <p class="text-muted">the course you loging</p>
@@ -31,7 +31,7 @@
         </div>
 
     @elseif($role === 'instructor')
-        
+
         <div class="card shadow-lg p-4 bg-glass">
             <h2 class="text-success mb-4">Hellow</h2>
             <p class="text-muted">your courses</p>
