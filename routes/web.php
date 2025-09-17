@@ -14,11 +14,12 @@ Route::get('/', function () {
 
 
 
-Route::get('/register', [AutherController::class, 'showRegister']);
-Route::post('/register', [AutherController::class, 'register']);
-
-Route::get('/login', [AutherController::class, 'showLogin'])->name('login');;
+// Authentication Routes
+Route::get('/login', [AutherController::class, 'showLogin'])->name('login');
 Route::post('/login', [AutherController::class, 'login']);
+
+Route::get('/register', [AutherController::class, 'showRegister'])->name('register');
+Route::post('/register', [AutherController::class, 'register']);
 
 Route::get('/logout', [AutherController::class, 'logout']);
 

@@ -52,23 +52,23 @@
     .btn-enroll:hover {
       background-color: #0056b3;
     }
-    .footer {
+    /* .footer {
       position: fixed;
       bottom: 0;
       width: 100%;
       background-color: #343a40;
       color: white;
-    }
-    .navbar {
+    } */
+    /* .navbar {
       background: rgba(255,255,255,0.2);
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    }
+    } */
   </style>
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="#">
         <i class="fas fa-graduation-cap"></i> EduPlatform
@@ -88,7 +88,7 @@
         </ul>
       </div>
     </div>
-  </nav>
+  </nav> -->
 
   <div class="container container-box">
     <h2 class="text-white text-center mb-4">Available Courses</h2>
@@ -139,9 +139,9 @@
     </div>
   </div>
 
-  <footer class="footer text-center text-white py-3">
+  <!-- <footer class="footer text-center text-white py-3">
     &copy; 2025 EduPlatform. All Rights Reserved.
-  </footer>
+  </footer> -->
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

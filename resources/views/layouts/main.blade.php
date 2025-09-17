@@ -15,10 +15,14 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
             padding-top: 70px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
         }
 
         /* Navbar Styling */
@@ -91,27 +95,24 @@
             transform: scale(1.05);
         }
 
-        /* Updated Hero Section styles */
         .hero-section {
             padding: 100px 0;
             text-align: center;
             background-image: radial-gradient(circle, #b083c5ff 0%, #0f0317ff 100%);
             color: #ffffff;
-            flex-grow: 1;
-            display: flex; /* Added for alignment */
-            align-items: center; /* Added for vertical alignment */
+            display: flex;
+            align-items: center;
         }
 
-        /* Hero image styling */
         .hero-image {
             max-width: 100%;
             height: auto;
-            border-radius: 15px; /* Added for a softer look */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Added for depth */
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
         }
         .hero-image:hover {
-            transform: translateY(-5px); /* Added a subtle hover effect */
+            transform: translateY(-5px);
         }
 
         .hero-section h1, .hero-section p {
@@ -135,16 +136,48 @@
             border: 1px solid #6A4582;
         }
 
-        #contact {
-            background-color: #ffffff;
-            padding: 60px 0;
+        /* تعديلات على قسم Contact Us */
+        /* #contact {
+            background-color: #f0f2f5; /* لون فاتح مناسب للخلفية */
+            /* padding: 60px 0;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            color: #0f0317ff; لون داكن للكتابة
         }
+
+        #contact .text-primary {
+            color: #7D4F97 !important; لون الخط الرئيسي
+        }
+
+        #contact .form-label {
+            color: #0f0317ff; لون الخط للـ label
+        }
+
+        #contact .form-control {
+            border-color: #7D4F97; لون حدود الحقول
+        } */
+
+        /* #contact .btn-primary {
+            background-color: #7D4F97;
+            border-color: #7D4F97;
+        }
+
+        #contact .btn-primary:hover {
+            background-color: #6A4582;
+            border-color: #6A4582;
+        } */
 
         .footer {
             background-image: radial-gradient(circle, #9083c5ff 0%, #0f0317ff 100%);
             color: #ecf0f1;
             padding: 50px 0 20px;
+            position: relative;
+            bottom: 0;
+        }
+
+        .footer::after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
         .footer .footer-title {
@@ -193,7 +226,7 @@
             font-size: 14px;
         }
 
-        /* Keyframes for the moving gradient background */
+        /* Keyframes for animations */
         @keyframes moveGradient {
             0% {
                 background-position: 0% 50%;
@@ -255,13 +288,12 @@
                 transform: scale(1.01);
             }
             .hero-section .container {
-                flex-direction: column; /* Stack columns on small screens */
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -305,43 +337,31 @@
         </div>
     </nav>
 
-    <!-- <div class="hero-section" id="home"> -->
-        <!-- <div class="container d-flex flex-column flex-lg-row align-items-center justify-content-center text-center text-lg-start">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h1 class="display-4 fw-bold">Start your educational journey now!</h1>
-                <p class="lead mt-3">Discover hundreds of training courses in various fields.</p>
-                <a href="{{ route('courses.index') }}" class="btn btn-primary btn-lg mt-4">Browse courses</a>
-            </div>
-
-            <div class="col-lg-6">
-                <img src="/public/images/WhatsApp Image 2025-09-17 at 5.05.16 AM.jpeg" alt="Emerge Academy Hero Image" class="img-fluid hero-image">
-            </div>
-        </div>
-    </div> -->
-
-    <div id="contact">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="text-center mb-4 fw-bold text-primary">Contact Us</h2>
-                    <p class="text-center text-secondary mb-5">Have a question or a message? We'd love to hear from you!</p>
-                    <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-bold">Your Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label fw-bold">Your Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
-                        </div>
-                    </form>
+    <!-- <div class="content-wrapper">
+        <div id="contact">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-center mb-4 fw-bold text-primary">Contact Us</h2>
+                        <p class="text-center text-secondary mb-5">Have a question or a message? We'd love to hear from you!</p>
+                        <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold">Your Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label fw-bold">Your Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <footer class="footer">
         <div class="container">
